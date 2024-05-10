@@ -6,7 +6,7 @@ pragma solidity ^0.8.0;
 import {L2Governor} from "contracts/governance/L2Governor.sol";
 
 /**
- * @author Modified from EasyCall (https://github.com/withtally/Easycall/blob/main/src/standards/L2GovernorCountingSimple.sol)
+ * @author Modified from KbsCall (https://github.com/withtally/Kbscall/blob/main/src/standards/L2GovernorCountingSimple.sol)
  *
  * @dev Extension of {Governor} for simple, 3 options, vote counting.
  *

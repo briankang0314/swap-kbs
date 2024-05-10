@@ -4,7 +4,7 @@ pragma solidity 0.8.13;
 import "contracts/interfaces/IPair.sol";
 import "contracts/interfaces/IRouter.sol";
 
-contract EasyLibrary {
+contract KbsLibrary {
     IRouter internal immutable router;
 
     constructor(address _router) {

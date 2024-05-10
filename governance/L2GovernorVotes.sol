@@ -7,7 +7,7 @@ import {IVotes} from "@openzeppelin/contracts/governance/utils/IVotes.sol";
 import {L2Governor} from "contracts/governance/L2Governor.sol";
 
 /**
- * @author Modified from EasyCall (https://github.com/withtally/Easycall/blob/main/src/standards/L2GovernorVotes.sol)
+ * @author Modified from KbsCall (https://github.com/withtally/Kbscall/blob/main/src/standards/L2GovernorVotes.sol)
  *
  * @dev Extension of {Governor} for voting weight extraction from an {ERC20Votes} token, or since v4.5 an {ERC721Votes} token.
  *

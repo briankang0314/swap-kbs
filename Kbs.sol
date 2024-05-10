@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity 0.8.13;
 
-import "contracts/interfaces/IEasy.sol";
+import "contracts/interfaces/IKbs.sol";
 
-contract Easy is IEasy {
-    string public constant name = "Easyswap";
-    string public constant symbol = "Easy";
+contract Kbs is IKbs {
+    string public constant name = "Kbsswap";
+    string public constant symbol = "Kbs";
     uint8 public constant decimals = 18;
     uint public totalSupply = 0;
 

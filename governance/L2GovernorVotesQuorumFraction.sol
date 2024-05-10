@@ -6,7 +6,7 @@ pragma solidity ^0.8.0;
 import {L2GovernorVotes} from "contracts/governance/L2GovernorVotes.sol";
 
 /**
- * @author Modified from EasyCall (https://github.com/withtally/Easycall/blob/main/src/standards/L2GovernorVotesQuorumFraction.sol)
+ * @author Modified from KbsCall (https://github.com/withtally/Kbscall/blob/main/src/standards/L2GovernorVotesQuorumFraction.sol)
  *
  * @dev Extension of {Governor} for voting weight extraction from an {ERC20Votes} token and a quorum expressed as a
  * fraction of the total supply.

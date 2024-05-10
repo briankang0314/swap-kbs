@@ -16,7 +16,7 @@ import "@openzeppelin/contracts/utils/Timers.sol";
 import "@openzeppelin/contracts/governance/IGovernor.sol";
 
 /**
- * @author Modified from EasyCall (https://github.com/withtally/Easycall/blob/main/src/standards/L2Governor.sol)
+ * @author Modified from KbsCall (https://github.com/withtally/Kbscall/blob/main/src/standards/L2Governor.sol)
  *
  * @dev Core of the governance system, designed to be extended though various modules.
  *

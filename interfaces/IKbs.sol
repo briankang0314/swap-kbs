@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity 0.8.13;
 
-interface IEasy {
+interface IKbs {
     function totalSupply() external view returns (uint);
     function balanceOf(address) external view returns (uint);
     function approve(address spender, uint value) external returns (bool);

@@ -221,7 +221,7 @@ contract Voter is IVoter {
             }
         }
 
-        if (msg.sender != governor) { // gov can create for any pool, even non-Easy pairs
+        if (msg.sender != governor) { // gov can create for any pool, even non-Kbs pairs
             require(isPair, "!_pool");
             require(isWhitelisted[tokenA] && isWhitelisted[tokenB], "!whitelisted");
         }

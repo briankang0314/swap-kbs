@@ -9,7 +9,7 @@ import {IVeArtProxy} from "contracts/interfaces/IVeArtProxy.sol";
 import {IVotingEscrow} from "contracts/interfaces/IVotingEscrow.sol";
 
 /// @title Voting Escrow
-/// @notice veEasy implementation that escrows ERC-20 tokens in the form of an ERC-721 NFT
+/// @notice veKbs implementation that escrows ERC-20 tokens in the form of an ERC-721 NFT
 /// @notice Votes have a weight depending on time, so that users are committed to the future of (whatever they are voting for)
 /// @author Modified from Solidly (https://github.com/solidlyexchange/solidly/blob/master/contracts/ve.sol)
 /// @author Modified from Curve (https://github.com/curvefi/curve-dao-contracts/blob/master/contracts/VotingEscrow.vy)
@@ -87,7 +87,7 @@ contract VotingEscrow is IERC721, IERC721Metadata, IVotes {
     uint internal tokenId;
 
     /// @notice Contract constructor
-    /// @param token_addr `Easy` token address
+    /// @param token_addr `Kbs` token address
     constructor(address token_addr, address art_proxy) {
         token = token_addr;
         voter = msg.sender;
@@ -126,8 +126,8 @@ contract VotingEscrow is IERC721, IERC721Metadata, IVotes {
                              METADATA STORAGE
     //////////////////////////////////////////////////////////////*/
 
-    string constant public name = "veEasy";
-    string constant public symbol = "veEasy";
+    string constant public name = "veKbs";
+    string constant public symbol = "veKbs";
     string constant public version = "1.0.0";
     uint8 constant public decimals = 18;
 

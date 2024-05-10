@@ -13,7 +13,7 @@ import {Babylonian} from "./libraries/Babylonian.sol";
 
 /*
  * @author Inspiration from the work of Slpper and Beefy.
- * Implemented and modified by EasySwap teams.
+ * Implemented and modified by KbsSwap teams.
  */
 contract SingleLiquidityProvider is Ownable, ReentrancyGuard {
     using SafeERC20 for IERC20;
@@ -21,20 +21,20 @@ contract SingleLiquidityProvider is Ownable, ReentrancyGuard {
     // Interface for Wrapped ETH (WETH)
     IWETH public WETH;
 
-    // EasyRouter interface
-    IRouter public EasyRouter;
+    // KbsRouter interface
+    IRouter public KbsRouter;
 
     // Maximum integer (used for managing allowance)
     uint256 public constant MAX_INT = 2**256 - 1;
 
-    // Minimum amount for a swap (derived from EasySwap)
+    // Minimum amount for a swap (derived from KbsSwap)
     uint256 public constant MINIMUM_AMOUNT = 1000;
 
     // Maximum reverse slp ratio (100 --> 1%, 1000 --> 0.1%)
     uint256 public maxSlpReverseRatio;
 
-    // Address EasyRouter
-    address private EasyRouterAddress;
+    // Address KbsRouter
+    address private KbsRouterAddress;
 
     // Address Wrapped ETH (WETH)
     address private WETHAddress;
@@ -94,25 +94,25 @@ contract SingleLiquidityProvider is Ownable, ReentrancyGuard {
     /*
      * @notice Constructor
      * @param _WETHAddress: address of the WETH contract
-     * @param _EasyRouter: address of the EasyRouter
+     * @param _KbsRouter: address of the KbsRouter
      * @param _maxSlpReverseRatio: maximum slp ratio
      */
     constructor(
         address _WETHAddress,
-        address _EasyRouter,
+        address _KbsRouter,
         uint256 _maxSlpReverseRatio
     ) {
         WETHAddress = _WETHAddress;
         WETH = IWETH(_WETHAddress);
-        EasyRouterAddress = _EasyRouter;
-        EasyRouter = IRouter(_EasyRouter);
+        KbsRouterAddress = _KbsRouter;
+        KbsRouter = IRouter(_KbsRouter);
         maxSlpReverseRatio = _maxSlpReverseRatio;
     }
 
     /*
      * @notice Slp ETH in a WETH pool (e.g. WETH/token)
-     * @param _lpToken: LP token address (e.g. Easy/ETH)
-     * @param _tokenAmountOutMin: minimum token amount (e.g. Easy) to receive in the intermediary swap (e.g. ETH --> Easy)
+     * @param _lpToken: LP token address (e.g. Kbs/ETH)
+     * @param _tokenAmountOutMin: minimum token amount (e.g. Kbs) to receive in the intermediary swap (e.g. ETH --> Kbs)
      */
     function slpInETH(address _lpToken, uint256 _tokenAmountOutMin,uint slippagetolerance) external payable nonReentrant {
         WETH.deposit{value: msg.value}();
@@ -134,8 +134,8 @@ contract SingleLiquidityProvider is Ownable, ReentrancyGuard {
      * @notice Slp a token in (e.g. token/other token)
      * @param _tokenToSlp: token to slp
      * @param _tokenAmountIn: amount of token to swap
-     * @param _lpToken: LP token address (e.g. Easy/BUSD)
-     * @param _tokenAmountOutMin: minimum token to receive (e.g. Easy) in the intermediary swap (e.g. BUSD --> Easy)
+     * @param _lpToken: LP token address (e.g. Kbs/BUSD)
+     * @param _tokenAmountOutMin: minimum token to receive (e.g. Kbs) in the intermediary swap (e.g. BUSD --> Kbs)
      */
     function slpInToken(
         address _tokenToSlp,
@@ -157,9 +157,9 @@ contract SingleLiquidityProvider is Ownable, ReentrancyGuard {
 
     /*
      * @notice Slp a LP token out to receive ETH
-     * @param _lpToken: LP token address (e.g. Easy/WETH)
+     * @param _lpToken: LP token address (e.g. Kbs/WETH)
      * @param _lpTokenAmount: amount of LP tokens to slp out
-     * @param _tokenAmountOutMin: minimum amount to receive (in ETH/WETH) in the intermediary swap (e.g. Easy --> ETH)
+     * @param _tokenAmountOutMin: minimum amount to receive (in ETH/WETH) in the intermediary swap (e.g. Kbs --> ETH)
      */
     function slpOutETH(
         address _lpToken,
@@ -191,10 +191,10 @@ contract SingleLiquidityProvider is Ownable, ReentrancyGuard {
 
     /*
      * @notice Slp a LP token out (to receive a token)
-     * @param _lpToken: LP token address (e.g. Easy/BUSD)
-     * @param _tokenToReceive: one of the 2 tokens from the LP (e.g. Easy or BUSD)
+     * @param _lpToken: LP token address (e.g. Kbs/BUSD)
+     * @param _tokenToReceive: one of the 2 tokens from the LP (e.g. Kbs or BUSD)
      * @param _lpTokenAmount: amount of LP tokens to slp out
-     * @param _tokenAmountOutMin: minimum token to receive (e.g. Easy) in the intermediary swap (e.g. BUSD --> Easy)
+     * @param _tokenAmountOutMin: minimum token to receive (e.g. Kbs) in the intermediary swap (e.g. BUSD --> Kbs)
      */
     function slpOutToken(
         address _lpToken,
@@ -264,11 +264,11 @@ contract SingleLiquidityProvider is Ownable, ReentrancyGuard {
         if (token0 == _tokenToSlp) {
             swapTokenOut = token1;
             swapAmountIn = _calculateAmountToSwap(_lpToken, _tokenAmountIn);
-            (swapAmountOut, ) = EasyRouter.getAmountOut(swapAmountIn, token0, token1);
+            (swapAmountOut, ) = KbsRouter.getAmountOut(swapAmountIn, token0, token1);
         } else {
             swapTokenOut = token0;
             swapAmountIn = _calculateAmountToSwap(_lpToken, _tokenAmountIn);
-            (swapAmountOut, ) = EasyRouter.getAmountOut(swapAmountIn, token1, token0);
+            (swapAmountOut, ) = KbsRouter.getAmountOut(swapAmountIn, token1, token0);
         }
 
         return (swapAmountIn, swapAmountOut, swapTokenOut);
@@ -312,7 +312,7 @@ contract SingleLiquidityProvider is Ownable, ReentrancyGuard {
             uint256 tokenAmountIn = (_lpTokenAmount * reserveA) / IPair(_lpToken).totalSupply();
 
             swapAmountIn = _calculateAmountToSwap(_lpToken, tokenAmountIn * 2);
-            (swapAmountOut, ) = EasyRouter.getAmountOut(swapAmountIn, token0, token1);
+            (swapAmountOut, ) = KbsRouter.getAmountOut(swapAmountIn, token0, token1);
 
             swapTokenOut = token0;
         } else {
@@ -320,7 +320,7 @@ contract SingleLiquidityProvider is Ownable, ReentrancyGuard {
             uint256 tokenAmountIn = (_lpTokenAmount * reserveB) / IPair(_lpToken).totalSupply();
 
             swapAmountIn = _calculateAmountToSwap(_lpToken, tokenAmountIn * 2);
-            (swapAmountOut, ) = EasyRouter.getAmountOut(swapAmountIn, token1, token0);
+            (swapAmountOut, ) = KbsRouter.getAmountOut(swapAmountIn, token1, token0);
 
             swapTokenOut = token1;
         }
@@ -386,7 +386,7 @@ contract SingleLiquidityProvider is Ownable, ReentrancyGuard {
         routerRoutes[0].stable = IPair(_lpToken).isstable();
 
         {
-        uint256[] memory swapedAmounts = EasyRouter.swapExactTokensForTokens(
+        uint256[] memory swapedAmounts = KbsRouter.swapExactTokensForTokens(
             swapAmountIn,
             _tokenAmountOutMin,
             routerRoutes,
@@ -396,7 +396,7 @@ contract SingleLiquidityProvider is Ownable, ReentrancyGuard {
         uint256 amountin = _tokenAmountIn - swapedAmounts[0];
 
         // Add liquidity and retrieve the amount of LP received by the sender
-        (, , lpTokenReceived) = EasyRouter.addLiquidity(
+        (, , lpTokenReceived) = KbsRouter.addLiquidity(
             routerRoutes[0].from,
             routerRoutes[0].to,
             routerRoutes[0].stable,
@@ -445,8 +445,8 @@ contract SingleLiquidityProvider is Ownable, ReentrancyGuard {
         (uint256 amount0, uint256 amount1) = IPair(_lpToken).burn(address(this));
 
         if(token0 != WETHAddress || token1 != WETHAddress){
-        require(amount0 >= MINIMUM_AMOUNT, "EasyRouter: INSUFFICIENT_A_AMOUNT");
-        require(amount1 >= MINIMUM_AMOUNT, "EasyRouter: INSUFFICIENT_B_AMOUNT");
+        require(amount0 >= MINIMUM_AMOUNT, "KbsRouter: INSUFFICIENT_A_AMOUNT");
+        require(amount1 >= MINIMUM_AMOUNT, "KbsRouter: INSUFFICIENT_B_AMOUNT");
         }
 
         IRouter.route[] memory routerRoutes = new IRouter.route[](1);
@@ -469,7 +469,7 @@ contract SingleLiquidityProvider is Ownable, ReentrancyGuard {
         }
 
         // Swap tokens
-        EasyRouter.swapExactTokensForTokens(swapAmountIn, _tokenAmountOutMin, routerRoutes, address(this), block.timestamp);
+        KbsRouter.swapExactTokensForTokens(swapAmountIn, _tokenAmountOutMin, routerRoutes, address(this), block.timestamp);
 
         // Return full balance for the token to receive by the sender
         return IERC20(_tokenToReceive).balanceOf(address(this));
@@ -480,9 +480,9 @@ contract SingleLiquidityProvider is Ownable, ReentrancyGuard {
      * @param _token: token address
      */
     function _approveTokenIfNeeded(address _token) private {
-        if (IERC20(_token).allowance(address(this), EasyRouterAddress) < 1e24) {
+        if (IERC20(_token).allowance(address(this), KbsRouterAddress) < 1e24) {
             // Re-approve
-            IERC20(_token).safeApprove(EasyRouterAddress, MAX_INT);
+            IERC20(_token).safeApprove(KbsRouterAddress, MAX_INT);
         }
     }
 
@@ -502,7 +502,7 @@ contract SingleLiquidityProvider is Ownable, ReentrancyGuard {
         address _token1 = IPair(_lpToken).token1();
         uint256 halfToken0Amount = _token0AmountIn / 2;
         uint256 nominator;
-        (nominator, ) = EasyRouter.getAmountOut(halfToken0Amount, _token0, _token1);
+        (nominator, ) = KbsRouter.getAmountOut(halfToken0Amount, _token0, _token1);
         uint256 denominator = halfToken0Amount * (_reserve1 - nominator) / (_reserve0 + halfToken0Amount);
         // Adjustment for price impact
         amountToSwap =
@@ -525,7 +525,7 @@ contract SingleLiquidityProvider is Ownable, ReentrancyGuard {
 
         uint256 halfToken0Amount = _token0AmountIn / 2;
         uint256 nominator;
-        (nominator, ) = EasyRouter.getAmountOut(halfToken0Amount, _token0, _token1);
+        (nominator, ) = KbsRouter.getAmountOut(halfToken0Amount, _token0, _token1);
         uint256 denominator = halfToken0Amount * (_reserve1 - nominator) / (_reserve0 + halfToken0Amount);
         // Adjustment for price impact
         amountToSwap =
@@ -541,7 +541,7 @@ contract SingleLiquidityProvider is Ownable, ReentrancyGuard {
 
         uint256 halfToken0Amount = _token0AmountIn / 2;
         uint256 nominator;
-        (nominator, ) = EasyRouter.getAmountOut(halfToken0Amount, _token1, _token0);
+        (nominator, ) = KbsRouter.getAmountOut(halfToken0Amount, _token1, _token0);
         uint256 denominator = halfToken0Amount * (_reserve0 - nominator) / (_reserve1 + halfToken0Amount);
         // Adjustment for price impact
         amountToSwap =

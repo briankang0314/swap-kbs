@@ -9,7 +9,7 @@ import {L2GovernorCountingSimple} from "contracts/governance/L2GovernorCountingS
 import {L2GovernorVotes} from "contracts/governance/L2GovernorVotes.sol";
 import {L2GovernorVotesQuorumFraction} from "contracts/governance/L2GovernorVotesQuorumFraction.sol";
 
-contract EasyGovernor is
+contract KbsGovernor is
     L2Governor,
     L2GovernorCountingSimple,
     L2GovernorVotes,
@@ -21,7 +21,7 @@ contract EasyGovernor is
     uint256 public proposalNumerator = 2; // start at 0.02%
 
     constructor(IVotes _ve)
-        L2Governor("Easy Governor")
+        L2Governor("Kbs Governor")
         L2GovernorVotes(_ve)
         L2GovernorVotesQuorumFraction(4) // 4%
     {
